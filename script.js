@@ -68,9 +68,15 @@ const resultatsUl = document.getElementById("resultats");
 const lienApmep = document.getElementById("lien-apmep");
 
 const urlsApmep = {
-  "2025": "https://www.apmep.fr/Annee-2025",
-  "2024": "https://www.apmep.fr/Annee-2024",
-  "2023": "https://www.apmep.fr/Annee-2023"
+  "2025": "https://www.apmep.fr/IMG/pdf/Annee_spe_2025_DV_4.pdf",
+  "2024": "https://www.apmep.fr/IMG/pdf/Spe_annee_2024_DV_FH4.pdf",
+  "2023": "https://www.apmep.fr/IMG/pdf/annee_2023_spe_DV.pdf"
+};
+
+const urlsPagesApmep = {
+  "2025": "https://www.apmep.fr/IMG/pdf/Annee_spe_2025_DV_4.pdf",
+  "2024": "https://www.apmep.fr/IMG/pdf/Spe_annee_2024_DV_FH4.pdf",
+  "2023": "https://www.apmep.fr/IMG/pdf/annee_2023_spe_DV.pdf"
 };
 
 // Chargement du JSON
@@ -234,10 +240,13 @@ function afficher(resultats, annee, proche) {
     return;
   }
 
+  const urlPdf = urlsPagesApmep[annee];
+
   resultats.forEach(s => {
     const li = document.createElement("li");
+    const lienPdf = urlPdf ? `<a href="${urlPdf}#page=${s.page}" target="_blank" style="margin-left: 10px; font-size: 12px;">📄 Voir en PDF</a>` : "";
     li.innerHTML = `
-      <strong>📖 Année ${annee} – Page ${s.page}</strong><br>
+      <strong>📖 Année ${annee} – Page ${s.page}</strong> ${lienPdf}<br>
       Thèmes : ${s.themes.join(", ")}
       ${proche && s.themesIgnorés.length > 0 ? `<br><em>Thèmes ignorés pour ce résultat : ${s.themesIgnorés.join(", ")}</em>` : ""}
     `;
