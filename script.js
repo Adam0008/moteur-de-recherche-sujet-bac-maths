@@ -53,7 +53,6 @@ const chapitres = {
   ]
 };
 
-// Groupes de thèmes incompatibles
 const themesIncompatibles = [
   ["géométrie dans l'espace", "analyse"],
   ["probabilités", "géométrie dans l'espace"]
@@ -110,7 +109,6 @@ function chargerThemes() {
   const annee = selectAnnee.value;
   const tousLesThemes = new Set();
 
-  // Gérer les deux formats possibles de données
   const donnees = Array.isArray(data[annee]) ? data[annee] : extrairePagesDonnees(data[annee]);
 
   donnees.forEach(item => {
@@ -209,16 +207,13 @@ function rechercher() {
   );
 
   if (resultats.length === 0 && obligatoires.length > 0) {
-    // Retirer automatiquement les thèmes incompatibles
     let themesFiltres = [...obligatoires];
     themesIncompatibles.forEach(groupe => {
       if (groupe.every(t => themesFiltres.includes(t))) {
-        // On supprime le premier thème du groupe
         themesFiltres = themesFiltres.filter(t => !groupe.includes(t)[0]);
       }
     });
 
-    // Approximation
     resultats = donnees.map(sujet => {
       const themesIgnorés = themesFiltres.filter(t => !sujet.themes.includes(t));
       const score = themesFiltres.length - themesIgnorés.length;
@@ -232,11 +227,14 @@ function rechercher() {
   }
 }
 
+// 🎯 Version corrigée de la fonction afficher()
 function afficher(resultats, annee, proche) {
   resultatsUl.innerHTML = "";
 
   if (resultats.length === 0) {
-    resultatsUl.innerHTML = "<li>❌ Aucun sujet correspondant à votre recherche.</li>";
+    const li = document.createElement("li");
+    li.textContent = "❌ Aucun sujet correspondant à votre recherche.";
+    resultatsUl.appendChild(li);
     return;
   }
 
@@ -244,18 +242,45 @@ function afficher(resultats, annee, proche) {
 
   resultats.forEach(s => {
     const li = document.createElement("li");
-    const lienPdf = urlPdf ? `<a href="${urlPdf}#page=${s.page}" target="_blank" style="margin-left: 10px; font-size: 12px;">📄 Voir en PDF</a>` : "";
-    li.innerHTML = `
-      <strong>📖 Année ${annee} – Page ${s.page}</strong> ${lienPdf}<br>
-      Thèmes : ${s.themes.join(", ")}
-      ${proche && s.themesIgnorés.length > 0 ? `<br><em>Thèmes ignorés pour ce résultat : ${s.themesIgnorés.join(", ")}</em>` : ""}
-    `;
+
+    // Titre
+    const strong = document.createElement("strong");
+    strong.textContent = `📖 Année ${annee} – Page ${s.page}`;
+    li.appendChild(strong);
+
+    // Lien PDF
+    if (urlPdf) {
+      const a = document.createElement("a");
+      a.href = `${urlPdf}#page=${s.page}`;
+      a.target = "_blank";
+      a.style.marginLeft = "10px";
+      a.style.fontSize = "12px";
+      a.textContent = "📄 Voir en PDF";
+      li.appendChild(a);
+    }
+
+    // Nouvelle ligne
+    li.appendChild(document.createElement("br"));
+
+    // Thèmes
+    const spanThemes = document.createElement("span");
+    spanThemes.textContent = `Thèmes : ${s.themes.join(", ")}`;
+    li.appendChild(spanThemes);
+
+    // Thèmes ignorés si proche
+    if (proche && s.themesIgnorés && s.themesIgnorés.length > 0) {
+      li.appendChild(document.createElement("br"));
+      const em = document.createElement("em");
+      em.textContent = `Thèmes ignorés pour ce résultat : ${s.themesIgnorés.join(", ")}`;
+      li.appendChild(em);
+    }
+
     resultatsUl.appendChild(li);
   });
 
   if (proche) {
     const info = document.createElement("li");
-    info.innerHTML = "⚠️ Aucun sujet ne correspondait exactement à tous vos thèmes. Voici les sujets les plus proches (thèmes incompatibles ignorés).";
+    info.textContent = "⚠️ Aucun sujet ne correspondait exactement à tous vos thèmes. Voici les sujets les plus proches (thèmes incompatibles ignorés).";
     info.style.fontStyle = "italic";
     resultatsUl.prepend(info);
   }
