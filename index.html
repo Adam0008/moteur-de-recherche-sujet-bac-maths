@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>Recherche de sujets de bac – Maths</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="container">
+  <h1>📘 Recherche de sujets de bac par thèmes</h1>
+
+  <section class="annee-section">
+    <label>Année :</label>
+    <select id="annee"></select>
+  </section>
+
+  <section class="filters-section">
+    <div class="filter-container">
+      <h2>✅ Thèmes obligatoires</h2>
+      
+      <div id="chapitres-obligatoires" class="chapitres"></div>
+    </div>
+
+    <div class="filter-container">
+      <h2>❌ Thèmes à exclure</h2>
+      <p class="hint">QCM et Vrai–Faux uniquement</p>
+      <div id="chapitres-exclus" class="chapitres"></div>
+    </div>
+  </section>
+
+  <button id="btn-recherche">🔍 Rechercher des sujets</button>
+
+  <section class="resultats-section">
+    <a id="lien-apmep" href="#" target="_blank" style="display: block; margin-bottom: 15px; font-size: 14px;">🔗 Voir tous les sujets sur APMEP</a>
+    <h2>📋 Résultats</h2>
+    <ul id="resultats"></ul>
+  </section>
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>
