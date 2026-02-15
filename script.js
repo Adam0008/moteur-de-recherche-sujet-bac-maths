@@ -344,6 +344,25 @@ Vrai-Faux, 50
     "2022": "https://www.apmep.fr/IMG/pdf/annee_2022_spe_DV.pdf"
   };
 
+  const PREFIX_FAIT = "sujets-traites-fait";
+
+  function getFait(annee, nomSujet, numExo) {
+    try {
+      const cle = PREFIX_FAIT + "|" + annee + "|" + nomSujet + "|" + numExo;
+      return localStorage.getItem(cle) === "1";
+    } catch (e) {
+      return false;
+    }
+  }
+
+  function getNumeroExercice(annee, sujetNom, page) {
+    const raw = data && data[annee] && data[annee].exercices;
+    if (!raw || !Array.isArray(raw)) return 0;
+    const exos = raw.filter((ex) => ex.sujet === sujetNom).sort((a, b) => a.page - b.page);
+    const idx = exos.findIndex((ex) => ex.page === page);
+    return idx >= 0 ? idx + 1 : 0;
+  }
+
   function chargerDonnees() {
     messageErreurJson.style.display = "none";
     messageErreurJson.innerHTML = "";
@@ -535,6 +554,9 @@ Vrai-Faux, 50
 
   function creerLigneResultat(s, annee, proche, urlPdf) {
     const li = document.createElement("li");
+    const exoNum = s.sujet ? getNumeroExercice(annee, s.sujet, s.page) : 0;
+    const estFait = exoNum > 0 && getFait(annee, s.sujet, exoNum);
+    if (estFait) li.classList.add("resultat-exercice-fait");
     const strong = document.createElement("strong");
     if (s.sujet) {
       strong.textContent = `📖 Année ${annee} – Page ${s.page} – ${s.sujet}`;
