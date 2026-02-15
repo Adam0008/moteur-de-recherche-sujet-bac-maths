@@ -389,6 +389,11 @@ li:hover {
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
 }
 
+#resultats li.resultat-exercice-fait {
+  background: linear-gradient(145deg, #e8f5e9 0%, #c8e6c9 100%);
+  border-left-color: #2e7d32;
+}
+
 li strong {
   color: #2c3e50;
   font-size: 1.05em;
